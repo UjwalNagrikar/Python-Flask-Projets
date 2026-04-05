@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-add {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-add:active {
+            transform: translateY(0);
+        }
+
+        .btn-view-all {
+            padding: 10px 20px;
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-all:hover {
+            background: #45b7ae;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn-view-all:active {
+            transform: translateY(0);
+        }
+
+        .tasks-header {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .tasks-list {
+            list-style: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            background: #eef0f8;
+            transform: translateX(5px);
+        }
+
+        .task-text {
+            color: #333;
+            font-size: 1em;
+            flex: 1;
+        }
+
+        .btn-delete {
+            padding: 8px 15px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+
+        .btn-delete:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .btn-add {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 My Tasks</h1>
+        
+        <form action="/add" method="POST">
+            <div class="input-group">
+                <input type="text" name="task" placeholder="Add a new task..." required>
+                <button type="submit" class="btn-add">Add</button>
+            </div>
+        </form>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="/view-all" style="text-decoration: none;">
+                <button type="button" class="btn-view-all">👁️ View All Tasks</button>
+            </a>
+        </div>
+
+        <div class="tasks-header">Your Tasks</div>
+        
+        {% if tasks %}
+        <ul class="tasks-list">
+            {% for task in tasks %}
+            <li class="task-item">
+                <span class="task-text">{{ task }}</span>
+                <form action="/delete/{{ loop.index0 }}" method="POST" style="margin: 0;">
+                    <button type="submit" class="btn-delete">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">✨ No tasks yet. Add one to get started!</div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Tasks - To Do App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-back:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .tasks-header {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .tasks-list {
+            list-style: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            background: #eef0f8;
+            transform: translateX(5px);
+        }
+
+        .task-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .task-content {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .task-text {
+            color: #333;
+            font-size: 1em;
+        }
+
+        .btn-delete {
+            padding: 8px 15px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+
+        .btn-delete:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .header {
+                flex-direction: column;
+            }
+
+            .btn-back {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 All Tasks</h1>
+            <a href="/" class="btn-back">← Back</a>
+        </div>
+
+        <div class="stats-container">
+            Total Tasks: <strong>{{ task_count }}</strong>
+        </div>
+
+        {% if tasks %}
+        <div class="tasks-header">Task List</div>
+        <ul class="tasks-list">
+            {% for task in tasks %}
+            <li class="task-item">
+                <div class="task-content">
+                    <span class="task-number">{{ loop.index }}</span>
+                    <span class="task-text">{{ task }}</span>
+                </div>
+                <form action="/delete/{{ loop.index0 }}" method="POST" style="margin: 0;">
+                    <button type="submit" class="btn-delete">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">✨ No tasks yet. Go back and add one!</div>
+        {% endif %}
+    </div>
+</body>
+</html>
